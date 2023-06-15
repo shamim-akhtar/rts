@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static GMAI.PathFinder;
 using static UnityEngine.GraphicsBuffer;
 
 public class NPCMovement : MonoBehaviour
@@ -14,7 +15,11 @@ public class NPCMovement : MonoBehaviour
   const float speedInterpolationTime = 0.25f;
 
   //  A queue of waypoints.
-  public Queue<Vector3> wayPoints = new Queue<Vector3>();
+  private Queue<Vector3> wayPoints = new Queue<Vector3>();
+
+  // The NPC
+  //public NPCMovement npc;
+  private GMAI.PathFinder pathFinder = new GMAI.PathFinder();
 
   // Start is called before the first frame update
   void Start()
@@ -22,19 +27,17 @@ public class NPCMovement : MonoBehaviour
     StartCoroutine(Coroutine_MoveTo());
   }
 
-  // Update is called once per frame
-  void Update()
-  {
-
-  }
-
   public void AddWayPoint(Vector3 point)
   {
     wayPoints.Enqueue(point);
   }
 
-  public void SetDestination(Vector3 goal, RectGrid grid, GMAI.PathFinder pathFinder = null)
+  public void SetDestination(Vector3 goal, RectGrid grid)
   {
+    pathFinder.heuristicCost = grid.ManhattanCost;
+    pathFinder.traversalCost = grid.EuclideanCost;
+    pathFinder.getNeighbours = grid.GetNeighbours;
+
     Vector2Int destination = grid.PosToIndex(goal);
     Debug.Log("Index: " + destination);
     if (pathFinder != null)

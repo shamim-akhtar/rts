@@ -995,7 +995,7 @@ MonoBehaviour:
   speed: 3
   m_Animator: {fileID: 1769654887}
   stopDistance: 0.5
-  rotationSpeed: 100
+  rotationSpeed: 200
 --- !u!143 &1011397548
 CharacterController:
   m_ObjectHideFlags: 0
