@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class NPCMovement : MonoBehaviour
 {
+  public CharacterController characterController;
   public float speed = 1f;
   public Animator m_Animator = null;
   public float stopDistance = 0.5f;
-
-  const float maxDirection = 1.0f;
-  const float directionInterpolationTime = .5f;
+  public float rotationSpeed = 10f;
   const float speedInterpolationTime = 0.25f;
 
   //  A queue of waypoints.
@@ -33,18 +33,18 @@ public class NPCMovement : MonoBehaviour
     wayPoints.Enqueue(point);
   }
 
-  public void SetDestination(Vector3 goal, RectGrid grid, GMAI.PathFinder pathFinder=null)
+  public void SetDestination(Vector3 goal, RectGrid grid, GMAI.PathFinder pathFinder = null)
   {
     Vector2Int destination = grid.PosToIndex(goal);
     Debug.Log("Index: " + destination);
-    if (pathFinder!=null)
+    if (pathFinder != null)
     {
       // With pathfinding.
       // 1. If pathfinder is running dont do anything.
       // 2. while pathfinder is running
       // 2.a perform one iteration of the loop.
       // 2.b continue until a success or failure is returned.
-      if(pathFinder.status != GMAI.PathFinderStatus.RUNNING)
+      if (pathFinder.status != GMAI.PathFinderStatus.RUNNING)
       {
         // clear all the waypoints.
         wayPoints.Clear();
@@ -67,104 +67,74 @@ public class NPCMovement : MonoBehaviour
 
   IEnumerator Coroutine_PathFinding(GMAI.PathFinder pathFinder, RectGrid grid)
   {
-    while(pathFinder.status == GMAI.PathFinderStatus.RUNNING)
+    while (pathFinder.status == GMAI.PathFinderStatus.RUNNING)
     {
       pathFinder.Step();
       yield return null;
     }
     // completed pathfinding.
 
-    if(pathFinder.status == GMAI.PathFinderStatus.FAILURE)
+    if (pathFinder.status == GMAI.PathFinderStatus.FAILURE)
     {
       Debug.Log("Failed finding a path. No valid path exists");
     }
-    if(pathFinder.status == GMAI.PathFinderStatus.SUCCESS)
+    if (pathFinder.status == GMAI.PathFinderStatus.SUCCESS)
     {
       // found a valid path.
       // accumulate all the locations by traversing from goal to the start.
       List<Vector2Int> reversePathLocations = new List<Vector2Int>();
       GMAI.PathFinderNode node = pathFinder.GetCurrentNode();
-      while(node != null)
+      while (node != null)
       {
         reversePathLocations.Add(node.location);
         node = node.parent;
       }
       // add all these points to the waypoints.
-      for(int i = reversePathLocations.Count-1; i >= 0; i--)
+      for (int i = reversePathLocations.Count - 1; i >= 0; i--)
       {
         Vector3 pos = grid.IndexToPos(reversePathLocations[i]);
         AddWayPoint(pos);
       }
-      //AddWayPoint(pathFinder.goal);
     }
   }
 
   IEnumerator Coroutine_MoveTo()
   {
-    while(true)
+    while (true)
     {
-      while(wayPoints.Count > 0)
+      while (wayPoints.Count > 0)
       {
-        yield return StartCoroutine(Coroutine_MoveToPoint_Anim(wayPoints.Dequeue(), speed));
+        Vector3 pt = wayPoints.Dequeue();
+        Debug.Log("Moving to point: " + pt);
+        yield return StartCoroutine(Coroutine_Move_Anim(pt));
       }
       yield return null;
     }
   }
 
-  IEnumerator Coroutine_MoveToPoint(Vector3 p, float speed)
+  private IEnumerator Coroutine_Move_Anim(Vector3 targetPosition)
   {
-    //Vector3 endP = new Vector3(p.x, p.y, 0.0f);
-    //Vector2 startP = new Vector2(transform.position.x, transform.position.y);
-    Vector3 startP = transform.position;
-
-    float distance = Vector3.Distance(p, startP);
-    float totalTime = distance/speed;
-    float elaspedTime = 0f;
-
-    while(elaspedTime < totalTime)
+    while (Vector3.Distance(transform.position, targetPosition) > stopDistance)
     {
-      float t = Mathf.Clamp01(elaspedTime/totalTime);
-      Vector3 pos = Vector3.Lerp(startP, p, t);
-      transform.position = pos;// new Vector3(pos.x, pos.y, transform.position.z);
-      //Debug.Log(elaspedTime);
-      elaspedTime += Time.deltaTime;
-      yield return new WaitForEndOfFrame();
-    }
-    transform.position = p;// new Vector3(p.x, p.y, transform.position.z);
-  }
-
-  IEnumerator Coroutine_MoveToPoint_Anim(Vector3 p, float speed)
-  {
-    //float stopDistance = 0.5f;
-    //Vector3 endP = new Vector3(p.x, p.y, 0.0f);
-    //Vector2 startP = new Vector2(transform.position.x, transform.position.y);
-    Vector3 startP = transform.position;
-    //Transform target = WayPoints[m_WayPointIndex];
-    if (Vector3.Distance(p, transform.position) > stopDistance)
-    {
+      Vector3 direction = targetPosition - transform.position;
+      Quaternion targetRotation = Quaternion.LookRotation(direction);
       m_Animator.SetFloat("Speed", speed, speedInterpolationTime, Time.deltaTime);
-      Vector3 currentDir = transform.forward;
-      Vector3 wantedDir = (p - transform.position);
-      wantedDir = wantedDir.normalized;
-      Vector3 cross = Vector3.Cross(currentDir, wantedDir);
-      //m_Animator.SetFloat("Direction", cross.y * maxDirection, directionInterpolationTime, Time.deltaTime);
-      Debug.Log("Moving");
+      transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+      characterController.Move(transform.forward * Time.deltaTime);
       yield return null;
     }
-    //yield return Coroutine_Stop_Anim();
+    yield return StartCoroutine(Coroutine_Stop_Anim());
   }
 
   IEnumerator Coroutine_Stop_Anim()
   {
     float dt = 0.0f;
-    while(dt <= speedInterpolationTime)
+    while (dt <= speedInterpolationTime)
     {
       m_Animator.SetFloat("Speed", 0f, speedInterpolationTime, Time.deltaTime);
       dt += Time.deltaTime;
-      Debug.Log("Stopping");
       yield return null;
     }
     m_Animator.SetFloat("Speed", 0f);
-    Debug.Log("Stopped");
   }
 }

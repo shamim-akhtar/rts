@@ -954,6 +954,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1011397546}
   - component: {fileID: 1011397547}
+  - component: {fileID: 1011397548}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -989,9 +990,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a61df33b9cb9b724cae8281a4637c09f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  characterController: {fileID: 1011397548}
   speed: 3
   m_Animator: {fileID: 1769654887}
   stopDistance: 0.5
+  rotationSpeed: 50
+--- !u!143 &1011397548
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011397545}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1753575317
 GameObject:
   m_ObjectHideFlags: 0
