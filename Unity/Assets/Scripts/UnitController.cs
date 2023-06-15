@@ -26,7 +26,7 @@ public class UnitController : MonoBehaviour
         Vector3 terrainPoint = hit.point;
 
         // Print the position of the intersected point
-        Debug.Log("Terrain Point: " + terrainPoint);
+        //Debug.Log("Terrain Point: " + terrainPoint);
 
         // You can further process or use the terrain point as needed
         //npc.AddWayPoint(terrainPoint);
