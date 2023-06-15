@@ -107,12 +107,18 @@ public class DragUIItem :
     }
 
     Vector3 pos = position;
+    // Get the grid.
+    RectGrid grid = App.Instance.mRectGridMap;
+    Vector2Int index = grid.PosToIndex(pos);
+
     // Round the position to the nearest whole number
-    pos.x = Mathf.FloorToInt(pos.x) + 0.5f;
-    pos.z = Mathf.FloorToInt(pos.z) + 0.5f;
+    //pos.x = Mathf.FloorToInt(pos.x);
+    //pos.z = Mathf.FloorToInt(pos.z);
+    pos.x = index.x * grid.mCellX;
+    pos.z = index.y * grid.mCellY;
     pos.y = 0.0f;
 
-    App.Instance.mRectGridMap.SetWalkable(false, pos);
+    App.Instance.mRectGridMap.SetWalkable(false, index);
 
     GameObject obj = Instantiate(
       PrefabToInstantiate,

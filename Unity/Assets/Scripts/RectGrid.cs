@@ -7,15 +7,39 @@ public class Cell
 {
   public Vector2Int index;
   public int weight = 1;// int.MaxValue;
+  public GameObject cellObj = null;
 
+  public Cell(Vector2Int ind, GameObject obj)
+  {
+    index = ind;
+    cellObj = obj;
+  }
   public Cell(Vector2Int ind)
   {
     index = ind;
+    cellObj = null;
   }
 
   public bool IsWalkable()
   {
     return weight != int.MaxValue;
+  }
+
+  public void SetWalkable(bool flag)
+  {
+    if(flag)
+    {
+      weight = 1;
+    }
+    else
+    {
+      weight = int.MaxValue;
+    }
+    if (cellObj != null)
+    {
+      RectGridCell sc = cellObj.GetComponent<RectGridCell>();
+      sc.SetWalkable(flag);
+    }
   }
 }
 
@@ -23,12 +47,12 @@ public class RectGrid : MonoBehaviour
 {
   public int mX = 20; // maximum number of columns
   public int mY = 20; // maximum number of rows.
-  public int mCellX = 1;
-  public int mCellY = 1;
+  public int mCellX = 5;
+  public int mCellY = 5;
 
   public Vector2Int startPt = Vector2Int.zero;
 
-  //public GameObject rectGridCellPrefab;
+  public GameObject rectGridCellPrefab;
 
   //GameObject[,] cells = null;
   Cell[,] cells = null;
@@ -41,15 +65,15 @@ public class RectGrid : MonoBehaviour
 
   public Vector3 IndexToPos(Vector2Int index)
   {
-    Vector3 pos = new Vector3(index.x * mCellX - startPt.x, 0.0f, index.y * mCellY - startPt.y);
+    Vector3 pos = new Vector3(index.x * mCellX, 0.0f, index.y * mCellY);
     Debug.Log("Position: " + pos.ToString());
     return pos;
   }
 
   public Vector2Int PosToIndex(Vector3 pos)
   {
-    int xIndex = Mathf.FloorToInt((pos.x - startPt.x) / mCellX);
-    int yIndex = Mathf.FloorToInt((pos.z - startPt.y) / mCellY);
+    int xIndex = Mathf.FloorToInt((pos.x + mCellX/2.0f) / mCellX);
+    int yIndex = Mathf.FloorToInt((pos.z + mCellY/2.0f) / mCellY);
 
     Debug.Log("Index: " + xIndex + ", " + yIndex);
     return new Vector2Int(xIndex, yIndex);
@@ -71,6 +95,7 @@ public class RectGrid : MonoBehaviour
       {
         Vector2Int index = new Vector2Int(i, j);
         cells[i, j] = new Cell(index);
+        cells[i, j].cellObj = Instantiate(rectGridCellPrefab, new Vector3(i * mCellX, 0.0f, j * mCellY), Quaternion.identity);
       }
     }
 
@@ -87,14 +112,15 @@ public class RectGrid : MonoBehaviour
 
   public void SetWalkable(bool flag, Vector2Int index)
   {
-    if(flag)
-    {
-      cells[index.x, index.y].weight = 1;
-    }
-    else
-    {
-      cells[index.x, index.y].weight = int.MaxValue;
-    }
+    cells[index.x, index.y].SetWalkable(flag);
+    //if (flag)
+    //{
+    //  //cells[index.x, index.y].weight = 1;
+    //}
+    //else
+    //{
+    //  cells[index.x, index.y].weight = int.MaxValue;
+    //}
   }
 
   // Update is called once per frame

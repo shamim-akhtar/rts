@@ -7,16 +7,16 @@ using UnityEngine;
 public class RectGridCell : MonoBehaviour
 {
   [SerializeField]
-  SpriteRenderer innerSprite;
+  GameObject walkableObj;
   [SerializeField]
-  SpriteRenderer outerSprite;
+  GameObject nonWalkableObj;
 
   public Vector2Int index = Vector2Int.zero;
   public bool isWalkable = true;
   // Start is called before the first frame update
   void Start()
   {
-
+    SetWalkable(isWalkable);
   }
 
   // Update is called once per frame
@@ -25,13 +25,17 @@ public class RectGridCell : MonoBehaviour
 
   }
 
-  public void SetInnerColor(Color col)
+  public void SetWalkable(bool flag)
   {
-    innerSprite.color = col;
-  }
-
-  public void SetOuterColor(Color col)
-  {
-    outerSprite.color = col;
+    if(flag)
+    {
+      walkableObj.SetActive(true);
+      nonWalkableObj.SetActive(false);
+    }
+    else
+    {
+      walkableObj.SetActive(false);
+      nonWalkableObj.SetActive(true);
+    }
   }
 }

@@ -30,7 +30,8 @@ public class NPCMovement : MonoBehaviour
   public void SetDestination(Vector3 goal, RectGrid grid, GMAI.PathFinder pathFinder=null)
   {
     Vector2Int destination = grid.PosToIndex(goal);
-    if(pathFinder!=null)
+    Debug.Log("Index: " + destination);
+    if (pathFinder!=null)
     {
       // With pathfinding.
       // 1. If pathfinder is running dont do anything.
