@@ -62,7 +62,7 @@ public class RectGrid : MonoBehaviour
   public Vector3 IndexToPos(Vector2Int index)
   {
     Vector3 pos = new Vector3(index.x * mCellX, 0.0f, index.y * mCellY);
-    Debug.Log("Position: " + pos.ToString());
+    //Debug.Log("Position: " + pos.ToString());
     return pos;
   }
 
@@ -71,7 +71,7 @@ public class RectGrid : MonoBehaviour
     int xIndex = Mathf.FloorToInt((pos.x + mCellX/2.0f) / mCellX);
     int yIndex = Mathf.FloorToInt((pos.z + mCellY/2.0f) / mCellY);
 
-    Debug.Log("Index: " + xIndex + ", " + yIndex);
+    //Debug.Log("Index: " + xIndex + ", " + yIndex);
     return new Vector2Int(xIndex, yIndex);
   }
 
