@@ -54,14 +54,10 @@ public class RectGrid : MonoBehaviour
 
   public GameObject rectGridCellPrefab;
 
-  //GameObject[,] cells = null;
   Cell[,] cells = null;
 
-  //public Color COLOR_WALKABLE = Color.cyan;
-  //public Color COLOR_NON_WALKABLE = Color.black;
-  //public Color COLOR_PATH = Color.green;
-
   public bool noDiagonalMovement = false;
+  public bool showGridCells = true;
 
   public Vector3 IndexToPos(Vector2Int index)
   {
@@ -95,7 +91,10 @@ public class RectGrid : MonoBehaviour
       {
         Vector2Int index = new Vector2Int(i, j);
         cells[i, j] = new Cell(index);
-        cells[i, j].cellObj = Instantiate(rectGridCellPrefab, new Vector3(i * mCellX, 0.0f, j * mCellY), Quaternion.identity);
+        if (showGridCells)
+        {
+          cells[i, j].cellObj = Instantiate(rectGridCellPrefab, new Vector3(i * mCellX, 0.0f, j * mCellY), Quaternion.identity);
+        }
       }
     }
 
@@ -113,14 +112,6 @@ public class RectGrid : MonoBehaviour
   public void SetWalkable(bool flag, Vector2Int index)
   {
     cells[index.x, index.y].SetWalkable(flag);
-    //if (flag)
-    //{
-    //  //cells[index.x, index.y].weight = 1;
-    //}
-    //else
-    //{
-    //  cells[index.x, index.y].weight = int.MaxValue;
-    //}
   }
 
   // Update is called once per frame
