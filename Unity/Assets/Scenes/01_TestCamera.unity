@@ -405,7 +405,7 @@ MonoBehaviour:
   mCellY: 5
   startPt: {x: 0, y: 0}
   rectGridCellPrefab: {fileID: 4852717751596002098, guid: ef5df6e89b40097459d615108519a175, type: 3}
-  noDiagonalMovement: 0
+  noDiagonalMovement: 1
 --- !u!114 &351262185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -921,7 +921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panSpeed: 10
-  zoomSpeed: 100
+  zoomSpeed: 200
   minZoomDistance: 5
   maxZoomDistance: 50
   minX: -100
@@ -942,7 +942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d27c7b87a98bc6344b33cf0d9fe6718f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  height: 5
+  height: 20
   angle: 45
 --- !u!1 &1011397545
 GameObject:
@@ -993,8 +993,8 @@ MonoBehaviour:
   characterController: {fileID: 1011397548}
   speed: 3
   m_Animator: {fileID: 1769654887}
-  stopDistance: 0.5
-  rotationSpeed: 50
+  stopDistance: 1
+  rotationSpeed: 100
 --- !u!143 &1011397548
 CharacterController:
   m_ObjectHideFlags: 0

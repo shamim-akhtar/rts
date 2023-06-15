@@ -118,12 +118,23 @@ public class NPCMovement : MonoBehaviour
     {
       Vector3 direction = targetPosition - transform.position;
       Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+      // Smoothly rotate towards the target rotation
+      float step = rotationSpeed * Time.deltaTime;
+      transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, step);
+
+      // Move forward
+      characterController.Move(transform.forward * speed * Time.deltaTime);
+
       m_Animator.SetFloat("Speed", speed, speedInterpolationTime, Time.deltaTime);
-      transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-      characterController.Move(transform.forward * Time.deltaTime);
+
       yield return null;
     }
-    yield return StartCoroutine(Coroutine_Stop_Anim());
+
+    if (wayPoints.Count == 0)
+    {
+      yield return StartCoroutine(Coroutine_Stop_Anim());
+    }
   }
 
   IEnumerator Coroutine_Stop_Anim()
