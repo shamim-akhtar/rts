@@ -30,7 +30,7 @@ public class UnitController : MonoBehaviour
 
         // You can further process or use the terrain point as needed
         //npc.AddWayPoint(terrainPoint);
-        npc.SetDestination(terrainPoint, App.Instance.mRectGridMap, App.Instance.mRectGridMap.pathFinder);
+        npc.SetDestination(terrainPoint, App.Instance.mRectGridMap);
       }
     }
 

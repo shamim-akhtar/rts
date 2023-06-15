@@ -75,11 +75,6 @@ public class RectGrid : MonoBehaviour
     return new Vector2Int(xIndex, yIndex);
   }
 
-
-  // The NPC
-  //public NPCMovement npc;
-  public GMAI.PathFinder pathFinder = new GMAI.PathFinder();
-
   // Start is called before the first frame update
   void Start()
   {
@@ -97,10 +92,6 @@ public class RectGrid : MonoBehaviour
         }
       }
     }
-
-    pathFinder.heuristicCost = ManhattanCost;
-    pathFinder.traversalCost = EuclideanCost;
-    pathFinder.getNeighbours = GetNeighbours;
   }
 
   public void SetWalkable(bool flag, Vector3 pos)
