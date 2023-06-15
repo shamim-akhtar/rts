@@ -405,7 +405,7 @@ MonoBehaviour:
   mCellY: 5
   startPt: {x: 0, y: 0}
   rectGridCellPrefab: {fileID: 4852717751596002098, guid: ef5df6e89b40097459d615108519a175, type: 3}
-  noDiagonalMovement: 1
+  noDiagonalMovement: 0
 --- !u!114 &351262185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -989,7 +989,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a61df33b9cb9b724cae8281a4637c09f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 3
+  m_Animator: {fileID: 1769654887}
+  stopDistance: 0.5
 --- !u!1 &1753575317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,6 +1128,11 @@ PrefabInstance:
 --- !u!4 &1769654886 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4718552058532164, guid: 705458a9eac3ae740932e6aa33f3ca89, type: 3}
+  m_PrefabInstance: {fileID: 1769654885}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1769654887 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95640295303221614, guid: 705458a9eac3ae740932e6aa33f3ca89, type: 3}
   m_PrefabInstance: {fileID: 1769654885}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1826159402

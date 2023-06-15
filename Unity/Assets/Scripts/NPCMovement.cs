@@ -6,6 +6,12 @@ using UnityEngine;
 public class NPCMovement : MonoBehaviour
 {
   public float speed = 1f;
+  public Animator m_Animator = null;
+  public float stopDistance = 0.5f;
+
+  const float maxDirection = 1.0f;
+  const float directionInterpolationTime = .5f;
+  const float speedInterpolationTime = 0.25f;
 
   //  A queue of waypoints.
   public Queue<Vector3> wayPoints = new Queue<Vector3>();
@@ -99,7 +105,7 @@ public class NPCMovement : MonoBehaviour
     {
       while(wayPoints.Count > 0)
       {
-        yield return StartCoroutine(Coroutine_MoveToPoint(wayPoints.Dequeue(), speed));
+        yield return StartCoroutine(Coroutine_MoveToPoint_Anim(wayPoints.Dequeue(), speed));
       }
       yield return null;
     }
@@ -125,5 +131,40 @@ public class NPCMovement : MonoBehaviour
       yield return new WaitForEndOfFrame();
     }
     transform.position = p;// new Vector3(p.x, p.y, transform.position.z);
+  }
+
+  IEnumerator Coroutine_MoveToPoint_Anim(Vector3 p, float speed)
+  {
+    //float stopDistance = 0.5f;
+    //Vector3 endP = new Vector3(p.x, p.y, 0.0f);
+    //Vector2 startP = new Vector2(transform.position.x, transform.position.y);
+    Vector3 startP = transform.position;
+    //Transform target = WayPoints[m_WayPointIndex];
+    if (Vector3.Distance(p, transform.position) > stopDistance)
+    {
+      m_Animator.SetFloat("Speed", speed, speedInterpolationTime, Time.deltaTime);
+      Vector3 currentDir = transform.forward;
+      Vector3 wantedDir = (p - transform.position);
+      wantedDir = wantedDir.normalized;
+      Vector3 cross = Vector3.Cross(currentDir, wantedDir);
+      //m_Animator.SetFloat("Direction", cross.y * maxDirection, directionInterpolationTime, Time.deltaTime);
+      Debug.Log("Moving");
+      yield return null;
+    }
+    //yield return Coroutine_Stop_Anim();
+  }
+
+  IEnumerator Coroutine_Stop_Anim()
+  {
+    float dt = 0.0f;
+    while(dt <= speedInterpolationTime)
+    {
+      m_Animator.SetFloat("Speed", 0f, speedInterpolationTime, Time.deltaTime);
+      dt += Time.deltaTime;
+      Debug.Log("Stopping");
+      yield return null;
+    }
+    m_Animator.SetFloat("Speed", 0f);
+    Debug.Log("Stopped");
   }
 }
