@@ -9,6 +9,14 @@ public class CameraController : MonoBehaviour
   public float minZoomDistance = 5f; // Minimum distance for zooming in
   public float maxZoomDistance = 50f; // Maximum distance for zooming out
 
+  // Example boundaries (modify based on your game's needs)
+  public float minX = -50f;
+  public float maxX = 50f;
+  public float minZ = -50f;
+  public float maxZ = 50f;
+  public float minY = 5f;
+  public float maxY = 50f;
+
   private Vector3 lastMousePosition; // Last recorded mouse position during the drag
 
   void Update()
@@ -29,14 +37,14 @@ public class CameraController : MonoBehaviour
         // You can further process or use the terrain point as needed
       }
     }
-    // Check for left mouse button down
+
     if (Input.GetMouseButtonDown(2))
     {
       // Store the current mouse position
       lastMousePosition = Input.mousePosition;
     }
 
-    // Check for left mouse button drag
+
     if (Input.GetMouseButton(2))
     {
       // Calculate the mouse movement delta
@@ -74,14 +82,6 @@ public class CameraController : MonoBehaviour
   {
     // Perform your own custom bounds checking logic here
     // Replace the following lines with your actual bounds checking code
-
-    // Example boundaries (modify based on your game's needs)
-    float minX = -50f;
-    float maxX = 50f;
-    float minZ = -50f;
-    float maxZ = 50f;
-    float minY = 5f;
-    float maxY = 50f;
 
     position.x = Mathf.Clamp(position.x, minX, maxX);
     position.y = Mathf.Clamp(position.y, minY, maxY);

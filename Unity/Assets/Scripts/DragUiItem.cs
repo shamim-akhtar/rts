@@ -108,9 +108,11 @@ public class DragUIItem :
 
     Vector3 pos = position;
     // Round the position to the nearest whole number
-    pos.x = Mathf.RoundToInt(pos.x) + 0.5f;
-    pos.z = Mathf.RoundToInt(pos.z) + 0.5f;
+    pos.x = Mathf.FloorToInt(pos.x) + 0.5f;
+    pos.z = Mathf.FloorToInt(pos.z) + 0.5f;
     pos.y = 0.0f;
+
+    App.Instance.mRectGridMap.SetWalkable(false, pos);
 
     GameObject obj = Instantiate(
       PrefabToInstantiate,
